@@ -19,6 +19,14 @@ function verifyIfExistsAccountByCPF(req, res, next) {
     return next()
 }
 
+function calculateAccountBalance(statement) {
+    const reducer = (accum, curr) => (
+        curr.type === 'deposit' ? accum + +curr.amount : accum - +curr.amount
+    )
+    const balance = statement.reduce(reducer, 0)
+    return balance
+}
+
 app.post("/account", (req, res) => {
     const { cpf, name } = req.body
     const customerAlreadyExists = customers.some(customer => customer.cpf === cpf)
@@ -53,6 +61,10 @@ app.post("/deposit/", verifyIfExistsAccountByCPF, (req, res) => {
 app.post("/withdraw/", verifyIfExistsAccountByCPF, (req, res) => {
     const { description, amount } = req.body
     const { customer } = req
+    const balance = calculateAccountBalance(customer.statement)
+    if(balance < +amount){
+        return res.status(400).json({ error: 'Do not have enough funds to withdraw' })
+    }
 
     const statementOperation = {
         description,
