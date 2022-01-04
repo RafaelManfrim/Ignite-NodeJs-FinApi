@@ -34,4 +34,36 @@ app.get("/statement/", verifyIfExistsAccountByCPF, (req, res) => {
     return res.json(customer.statement)
 })
 
+app.post("/deposit/", verifyIfExistsAccountByCPF, (req, res) => {
+    const { description, amount } = req.body
+    const { customer } = req
+
+    const statementOperation = {
+        description,
+        amount,
+        date: new Date(),
+        type: "deposit"
+    }
+
+    customer.statement.push(statementOperation)
+
+    return res.status(201).send()
+})
+
+app.post("/withdraw/", verifyIfExistsAccountByCPF, (req, res) => {
+    const { description, amount } = req.body
+    const { customer } = req
+
+    const statementOperation = {
+        description,
+        amount,
+        date: new Date(),
+        type: "withdraw"
+    }
+
+    customer.statement.push(statementOperation)
+
+    return res.status(201).send()
+})
+
 app.listen(3333)
