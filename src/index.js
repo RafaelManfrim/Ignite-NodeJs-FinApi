@@ -27,6 +27,11 @@ function calculateAccountBalance(statement) {
     return balance
 }
 
+app.get('/account', verifyIfExistsAccountByCPF, (req, res) => {
+    const { customer } = req
+    return res.json({ customer })
+})
+
 app.post("/account", (req, res) => {
     const { cpf, name } = req.body
     const customerAlreadyExists = customers.some(customer => customer.cpf === cpf)
@@ -34,6 +39,14 @@ app.post("/account", (req, res) => {
         return res.status(400).json({ error: 'Customer already exists!' })
     }
     customers.push({ id: uuidV4(), name, cpf, statement: [] })
+    return res.status(201).send()
+})
+
+app.put("/account/", verifyIfExistsAccountByCPF, (req, res) => {
+    const { name } = req.body
+    const { customer } = req
+
+    customer.name = name
     return res.status(201).send()
 })
 
