@@ -27,6 +27,8 @@ function calculateAccountBalance(statement) {
     return balance
 }
 
+app.get("/accounts", (req, res) => res.json({ customers }))
+
 app.get('/account', verifyIfExistsAccountByCPF, (req, res) => {
     const { customer } = req
     return res.json({ customer })
