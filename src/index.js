@@ -50,6 +50,12 @@ app.put("/account/", verifyIfExistsAccountByCPF, (req, res) => {
     return res.status(201).send()
 })
 
+app.delete("/account/", verifyIfExistsAccountByCPF, (req, res) => {
+    const { customer } = req
+    customers.splice(customer, 1)
+    res.status(204).send()
+})
+
 app.get("/statement/", verifyIfExistsAccountByCPF, (req, res) => {
     const { customer } = req
     return res.json(customer.statement)
