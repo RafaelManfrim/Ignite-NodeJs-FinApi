@@ -78,4 +78,15 @@ app.post("/withdraw/", verifyIfExistsAccountByCPF, (req, res) => {
     return res.status(201).send()
 })
 
+app.get("/statement/date", verifyIfExistsAccountByCPF, (req, res) => {
+    const { customer } = req
+    const { date } = req.query
+
+    const dateFormat = new Date(`${date} 00:00`)
+
+    const statement = customer.statement.filter(statement => statement.date.toDateString() === new Date(dateFormat).toDateString())
+
+    return res.json(statement)
+})
+
 app.listen(3333)
