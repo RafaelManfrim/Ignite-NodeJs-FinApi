@@ -108,4 +108,10 @@ app.get("/statement/date", verifyIfExistsAccountByCPF, (req, res) => {
     return res.json(statement)
 })
 
+app.get("/balance", verifyIfExistsAccountByCPF, (req, res) => {
+    const { customer } = req
+    const balance = calculateAccountBalance(customer.statement)
+    return res.json({ balance })
+})
+
 app.listen(3333)
